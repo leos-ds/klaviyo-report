@@ -1,0 +1,71 @@
+name: Klaviyo Report
+
+on:
+  # Nightly at 03:00 UTC (05:00 CET)
+  schedule:
+    - cron: '0 3 * * *'
+
+  # Manual trigger with optional timeframe override
+  workflow_dispatch:
+    inputs:
+      timeframe:
+        description: Timeframe
+        required: false
+        default: last_30_days
+        type: choice
+        options:
+          - last_7_days
+          - last_30_days
+          - last_90_days
+          - last_365_days
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for gh-pages deploy
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write .env from GitHub Secrets
+        run: |
+          cat > .env << 'ENVEOF'
+          KLAVIYO_OUTDOORLINE_KEY=${{ secrets.KLAVIYO_OUTDOORLINE_KEY }}
+          KLAVIYO_KREKRY_CZ_KEY=${{ secrets.KLAVIYO_KREKRY_CZ_KEY }}
+          KLAVIYO_KREKRY_COM_KEY=${{ secrets.KLAVIYO_KREKRY_COM_KEY }}
+          KLAVIYO_KRUSCHIKI_KEY=${{ secrets.KLAVIYO_KRUSCHIKI_KEY }}
+          KLAVIYO_KINTSUGI_KEY=${{ secrets.KLAVIYO_KINTSUGI_KEY }}
+          KLAVIYO_OURTE_KEY=${{ secrets.KLAVIYO_OURTE_KEY }}
+          KLAVIYO_MADE_IN_JAPAN_KEY=${{ secrets.KLAVIYO_MADE_IN_JAPAN_KEY }}
+          CLICKUP_API_TOKEN=${{ secrets.CLICKUP_API_TOKEN }}
+          ENVEOF
+
+      - name: Generate report
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: |
+          TIMEFRAME=${{ github.event.inputs.timeframe || 'last_30_days' }}
+          python scripts/generate_report.py \
+            --timeframe "$TIMEFRAME" \
+            --out site/index.html \
+            --gh-repo "${{ github.repository }}"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          commit_message: "report: ${{ github.event.inputs.timeframe || 'last_30_days' }} [skip ci]"
+          force_orphan: false

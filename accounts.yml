@@ -1,0 +1,86 @@
+# Digismoothie Klaviyo client registry
+#
+# Each entry maps a slug → env var name (NOT the key value).
+# The actual keys live in .env (gitignored) and in the agency 1Password vault.
+#
+# Status: active | setup | progress
+# Industry options: food_beverage, fashion, sports_outdoor, health_beauty,
+#   home_garden, electronics, pet, lifestyle, default
+# Locale: cs, sk, pl, en
+
+accounts:
+
+  - slug: outdoorline
+    display_name: Outdoorline
+    env_var: KLAVIYO_OUTDOORLINE_KEY
+    locale: cs
+    industry: sports_outdoor
+    status: progress
+    clickup_folder_name: Outdoorline
+    notes: "Flows in progress"
+
+  - slug: krekry_cz
+    display_name: Krekry CZ
+    env_var: KLAVIYO_KREKRY_CZ_KEY
+    locale: cs
+    industry: food_beverage
+    status: active
+    clickup_folder_name: Krekry
+    notes: "In-house, full"
+
+  - slug: krekry_com
+    display_name: Krekry.com (EN)
+    env_var: KLAVIYO_KREKRY_COM_KEY
+    locale: en
+    industry: food_beverage
+    status: active
+    clickup_folder_name: Krekry
+    notes: "SK · DE planned"
+
+  - slug: kruschiki
+    display_name: Kruschiki
+    env_var: KLAVIYO_KRUSCHIKI_KEY
+    locale: pl
+    industry: food_beverage
+    status: active
+    clickup_folder_name: Kruschiki
+    notes: "Primary account"
+
+  - slug: kintsugi
+    display_name: Kintsugi
+    env_var: KLAVIYO_KINTSUGI_KEY
+    locale: cs
+    industry: lifestyle
+    status: setup
+    clickup_folder_name: Kintsugi
+    notes: "Setup in progress"
+
+  - slug: ourte
+    display_name: Ourte
+    env_var: KLAVIYO_OURTE_KEY
+    locale: cs
+    industry: default
+    status: progress
+    clickup_folder_name: Ourte
+    notes: "Flows in progress"
+
+  - slug: made_in_japan
+    display_name: Made in Japan
+    env_var: KLAVIYO_MADE_IN_JAPAN_KEY
+    locale: cs
+    industry: lifestyle
+    status: active
+    clickup_folder_name: Made in Japan
+    notes: "Flows only"
+
+# Shared config
+clickup:
+  shared_list_id: "901515412227"
+  space_name: Email marketing
+  campaign_field_cz: CZ Klaviyo
+  campaign_field_sk: SK Klaviyo
+
+reporting:
+  default_timeframe: last_30_days
+  short_timeframe: last_30_days
+  output_dir: outputs/
