@@ -1782,6 +1782,28 @@ showView('overview');
   if (sel && DATA.timeframe) sel.value = DATA.timeframe;
   if (DATA.timeframe) _currentTf = DATA.timeframe;
 })();
+
+// ── Password protection ───────────────────────────────────────────────────────
+const PW_HASH = '086a7e747c433e97d9c5b0fd20ba9bacc6638dc74474038da88b5da22aa58025';
+async function hashPw(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function checkPw() {
+  const val = document.getElementById('pw-input').value;
+  const h = await hashPw(val);
+  if (h === PW_HASH) {
+    sessionStorage.setItem('ds_auth', '1');
+    document.getElementById('pw-overlay').classList.add('hidden');
+  } else {
+    document.getElementById('pw-error').textContent = 'Špatné heslo';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+if (sessionStorage.getItem('ds_auth') === '1') {
+  document.getElementById('pw-overlay').classList.add('hidden');
+}
 </script>
 </body>
 </html>"""
