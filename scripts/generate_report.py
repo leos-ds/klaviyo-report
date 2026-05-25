@@ -966,9 +966,50 @@ body {
 /* View toggle */
 .view { display: none; }
 .view.active { display: block; }
+
+/* ── Password protection ──────────────────────────────────────────── */
+#pw-overlay {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; flex-direction: column; gap: 16px;
+}
+#pw-overlay.hidden { display: none; }
+.pw-box {
+  background: var(--bg2); border: 1px solid var(--bg3);
+  border-radius: 12px; padding: 40px 48px; text-align: center;
+  display: flex; flex-direction: column; gap: 16px; min-width: 320px;
+}
+.pw-logo { font-size: 22px; font-weight: 700; color: var(--text); }
+.pw-sub { font-size: 13px; color: var(--text2); }
+.pw-input {
+  padding: 10px 14px; border-radius: 8px; border: 1px solid var(--bg3);
+  background: var(--bg); color: var(--text); font-size: 15px;
+  outline: none; text-align: center; letter-spacing: 2px;
+}
+.pw-input:focus { border-color: var(--blue); }
+.pw-btn {
+  padding: 10px; border-radius: 8px; background: var(--blue);
+  color: #fff; border: none; font-size: 14px; font-weight: 600;
+  cursor: pointer;
+}
+.pw-btn:hover { opacity: 0.9; }
+.pw-error { color: var(--red); font-size: 13px; min-height: 18px; }
+
 </style>
 </head>
 <body>
+
+<div id="pw-overlay">
+  <div class="pw-box">
+    <div class="pw-logo">Digismoothie</div>
+    <div class="pw-sub">Klaviyo Agency Report</div>
+    <input class="pw-input" id="pw-input" type="password" placeholder="Heslo" autofocus
+      onkeydown="if(event.key==='Enter') checkPw()">
+    <button class="pw-btn" onclick="checkPw()">Vstoupit</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
 <div class="layout">
 
   <aside class="sidebar" id="sidebar">
